@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
+from django.conf import settings
 
 
 class UserProfileManager(BaseUserManager):
@@ -31,8 +32,6 @@ class UserProfileManager(BaseUserManager):
         user.save(using = self._db)
         return user
 
-
-
 class UserProfile(AbstractBaseUser, PermissionsMixin):
     """ Database model for users in the system"""
     email = models.EmailField(max_length = 255, unique = True)
@@ -40,7 +39,6 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     # Will be used to determine is users profile is active
     is_active = models.BooleanField(default=True)
     # Will determine if user is staff user 
-    is_staff = models.BooleanField(default=False)
 
     objects = UserProfileManager()
 
@@ -61,5 +59,17 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         """Return str representation of our user. Recommended for all django models 
         """        
         return self.email
+
+class ProfileFeedItem(models.Model):
+    """Profile status update"""
+    user_profile = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+    status_text = models.CharField(max_length=255)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return self.status_text
     
 
