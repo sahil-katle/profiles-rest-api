@@ -101,7 +101,7 @@ class UserProfileFeedViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ProfileFeedItemSerializer
     queryset = models.ProfileFeedItem.objects.all()
     permission_classes = (permissions.UpdateOwnStatus,
-                          IsAuthenticated)
+                          IsAuthenticated   )
     
     def perform_create(self, serializer):
         """Set the user profile to logged in user"""
